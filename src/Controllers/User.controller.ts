@@ -1,25 +1,27 @@
 import { Request, Response } from "express";
 import { createUser, getUserByEmail } from "../Services/User.service";
 
-
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { fullname, email, password, role } = req.body;
+    const { fullname, email, password } = req.body;
 
-    // Ensure we await the result from the database query
-    const existingUser = await getUserByEmail(email); 
+    if (!fullname || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if user already exists
+    const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-      
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // If user doesn't exist, create a new one
+    // Create new user
     const user = await createUser(fullname, email, password);
+
     return res.status(201).json({ message: "User registered successfully", user });
   } catch (error) {
-    // Handle unexpected errors
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Register error:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

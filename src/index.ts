@@ -1,6 +1,8 @@
 import express,{Request,Response} from "express";
 import cors from "cors";
 
+import userRoute from "./Routes/User.route"
+
 
 
 const app =express();
@@ -12,7 +14,8 @@ const PORT = 4200;
 app.use(express.json())
 app.use(cors())
 
-
+//middleware for endpoints
+app.use('/api/v1/users',userRoute)
 
 
 
