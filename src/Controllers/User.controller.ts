@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createUser, getUserByEmail, loginUser } from "../Services/User.service";
+import { createUser, getUserByEmail, loginUser,getAllUsers } from "../Services/User.service";
 
 
 
@@ -48,3 +48,22 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const getUsers=async(req:Request,res:Response):Promise<void>=>{
+  try{
+    const users =await getAllUsers();
+if(users.length===0){
+  res.status(404).json({message: "No users found"})
+  res.status(200).json({"All Users":users})
+
+}
+
+
+  }
+  catch(error){
+    console.error(error);
+     res.status(500).json({ message: "Internal Server Error" });
+  }
+
+
+}

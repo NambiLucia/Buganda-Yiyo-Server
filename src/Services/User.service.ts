@@ -6,6 +6,12 @@ import dotenv from "dotenv"
 dotenv.config()
 
 
+export const getAllUsers =async():Promise<User[]>=>{
+  return await prisma.user.findMany();
+  }
+
+
+
 export const createUser = async (fullname: string, email: string, password: string): Promise<User> => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -51,3 +57,4 @@ export const loginUser = async (email: string, password: string): Promise<string
 
   return token; 
 };
+
