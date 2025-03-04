@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { createUser, getUserByEmail } from "../Services/User.service";
+import { createUser, getUserByEmail, loginUser } from "../Services/User.service";
+
+
+
+
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -23,5 +27,24 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     console.error("Register error:", error);
      res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email, password } = req.body;
+
+    // Call the loginUser service
+    const token = await loginUser(email, password);
+
+    if (!token) {
+       res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    res.status(200).json({ message: "Login successful", token });
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
