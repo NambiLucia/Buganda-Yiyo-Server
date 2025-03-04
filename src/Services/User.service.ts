@@ -6,10 +6,18 @@ import dotenv from "dotenv"
 dotenv.config()
 
 
-export const getAllUsers =async():Promise<User[]>=>{
-  return await prisma.user.findMany();
+// service.ts
+export const getAllUsers = async (): Promise<User[]> => {
+  try {
+    console.log("Fetching users from database...");
+    const users = await prisma.user.findMany();
+    console.log("Users fetched successfully:", users);
+    return users;
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error("Database query failed");
   }
-
+};
 
 
 export const createUser = async (fullname: string, email: string, password: string): Promise<User> => {
